@@ -6,6 +6,7 @@ class Zombie {
   int daño;
   int desaparecer;
   int mordisco;
+  boolean comiendo;
   boolean congelado;
   boolean vivo;
   Temporizador putrefaccion;
@@ -14,8 +15,8 @@ class Zombie {
     pos = new PVector(1050, 100 * i);
     vel = new PVector(1, 0);
     tam = new PVector(50, 100);
-    vida = 9;
-    daño = 3;
+    vida = 30;
+    daño = 1;
     desaparecer = 2000;
     mordisco = 1000;
     vivo = true;
@@ -23,6 +24,7 @@ class Zombie {
   }
 
   void comer () {
+    vel.x *= 0;
     come = new Temporizador(mordisco);
   }
 
@@ -32,15 +34,17 @@ class Zombie {
   }
 
   void mover() {
-    if (congelado && vivo) vel.x = 0.5;
-    else if (!congelado && vivo) vel.x = 1;
+    if (congelado && vivo && !comiendo) vel.x = 0.5;
+    else if (!congelado && vivo && !comiendo) vel.x = 1;
     pos.sub(vel);
   }
 
   boolean comiendo(PVector otro) {
-    if (otro.x + 30 >= pos.x && otro.x <= pos.x && otro.y - 30 == pos.y)
+    if (otro.x + 20 >= pos.x && otro.x <= pos.x && otro.y - 30 == pos.y) {
+      comiendo = true;
+      comer();
       return true;
-    else
+    } else
       return false;
   }
 

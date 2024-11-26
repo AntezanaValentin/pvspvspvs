@@ -9,9 +9,10 @@ class Temporizador {
 
   boolean elTiempoPaso() {
     int tiempoActual = millis();
-    if (tiempoActual - ultimoEvento >= duracion) {
+    if (tiempoActual - ultimoEvento >= duracion)
       return true;
-    } else return false;
+    else
+      return false;
   }
 
   void actualizarVariables() {

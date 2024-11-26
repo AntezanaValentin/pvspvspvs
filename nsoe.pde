@@ -43,7 +43,7 @@ void setup() {
 }
 
 void draw() {
-  background(150,150,150);
+  background(150, 150, 150);
 
   actualizarCartasyPlantas();
   sistBaldosas();
@@ -60,5 +60,10 @@ void draw() {
   fill(255);
   textSize(40);
   textAlign(LEFT);
-  text(points,30,60);
+  text(points, 30, 60);
+  perder();
+  for(Zombie z : zombies) {
+    if(z.come != null)
+      println(z.come.elTiempoPaso(), z.come.duracion, z.come.ultimoEvento);
+  }
 }

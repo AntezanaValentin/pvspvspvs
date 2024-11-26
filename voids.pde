@@ -172,6 +172,8 @@ void lasPlantasSiendoComidasPorZombie() {
         }
       }
       plantas.remove(p);
+      for (Zombie z : zombies)
+        z.comiendo = false;
     }
   }
 }
@@ -252,5 +254,17 @@ void mostrarTodo() {
   for (Sol s : soles) {
     s.mover();
     s.mostrar();
+  }
+}
+       
+
+void perder() {
+  for (Zombie z : zombies) {
+    if (z.pos.x <= -50) {
+      background(100, 0, 0);
+      textSize(100);
+      textAlign(CENTER);
+      text("PERDISTE", 100, 100);
+    }
   }
 }
