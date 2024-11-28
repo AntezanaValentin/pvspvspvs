@@ -22,21 +22,21 @@ class Guisante {
   void guisanteNormal() {
     fill(0, 220, 0);
     circle(pos.x, pos.y, r);
-    damage = 2;
+    damage = 5;
     lentitud = new PVector(1, 0);
   }
 
   void guisanteHielo() {
     fill(110, 255, 150);
     circle(pos.x, pos.y, r);
-    damage = 1;
+    damage = 3;
     lentitud = new PVector(0.5, 0);
   }
 
   void guisanteFuego() {
     fill(255, 0, 0);
     circle(pos.x, pos.y, r);
-    damage = 3;
+    damage = 8;
     lentitud = new PVector(1, 0);
   }
 

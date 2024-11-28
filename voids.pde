@@ -1,68 +1,77 @@
-Temporizador tempZomb = new Temporizador(4000);
+Temporizador tempZomb = new Temporizador(10000);
 Temporizador tempSol = new Temporizador(10000);
+Temporizador tempMordisco = new Temporizador(1000);
 Boolean isSeleccionada = false;
 Carta cartaSeleccionada;
 Planta cuandoArrastro;
 
 
 void mousePressed() {
-  int mx = mouseX;
-  int my = mouseY;
-  isSeleccionada = false;
-  cartaSeleccionada = null;
-  cuandoArrastro = null;
-  for (Carta c : cartas) {
-    if (mx > c.pos.x &&
-      mx < c.pos.x + c.tam.x &&
-      my > c.pos.y &&
-      my < c.pos.y + c.tam.y) {
-      cartaSeleccionada = c;
-      isSeleccionada = true;
+  if (estado > 2) {
+    int mx = mouseX;
+    int my = mouseY;
+    isSeleccionada = false;
+    cartaSeleccionada = null;
+    cuandoArrastro = null;
+    for (Carta c : cartas) {
+      if (mx > c.pos.x &&
+        mx < c.pos.x + c.tam.x &&
+        my > c.pos.y &&
+        my < c.pos.y + c.tam.y) {
+        cartaSeleccionada = c;
+        isSeleccionada = true;
+      }
     }
-  }
 
 
-  for (Sol s : soles) {
-    if (mouseX <= s.pos.x + (s.r/2) &&
-      mouseX >= s.pos.x - (s.r/2) &&
-      mouseY <= s.pos.y + (s.r/2) &&
-      mouseY >= s.pos.y - (s.r/2)) {
-      s.agarrado();
+    for (Sol s : soles) {
+      if (mouseX <= s.pos.x + (s.r/2) &&
+        mouseX >= s.pos.x - (s.r/2) &&
+        mouseY <= s.pos.y + (s.r/2) &&
+        mouseY >= s.pos.y - (s.r/2)) {
+        float distancia = s.pos.x - 25;
+        s.agarrado(distancia);
+      }
     }
+  } else if (estado == 1) {
+    if (mouseX >= width/2 - 50 && mouseX <= width/2 + 50 && mouseY >= height/2 - 20 && mouseY <= height/2 + 20) estado = 2;
+  } else if (estado == 2) {
+    if (mouseX >= width/2 - 200 && mouseX <= width/2 - 100 && mouseY >= height/2 - 20 && mouseY <= height/2 + 20) estado = 3;
+    else if (mouseX >= width/2 - 50 && mouseX <= width/2 + 50 && mouseY >= height/2 - 20 && mouseY <= height/2 + 20) estado = 4;
+    else if (mouseX >= width/2 + 100 && mouseX <= width/2 + 200 && mouseY >= height/2 - 20 && mouseY <= height/2 + 20) estado = 5;
   }
 }
 
 void mouseReleased() {
-  PVector mouse = new PVector(mouseX, mouseY);
-  if (isSeleccionada == true) {
-    cuandoArrastro.mostrar();
+  if (estado > 1) {
+    PVector mouse = new PVector(mouseX, mouseY);
+    if (isSeleccionada == true) {
+      cuandoArrastro.mostrar();
 
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 5; j++) {
-        if (mouse.x > baldosa[i][j].pos.x &&
-          mouse.x < baldosa[i][j].pos.x + baldosa[i][j].tam.x &&
-          mouse.y > baldosa[i][j].pos.y &&
-          mouse.y < baldosa[i][j].pos.y + baldosa[i][j].tam.y && baldosa[i][j].plantado == false && points - cartaSeleccionada.coste >= 0) {
-          plantas.add(new Planta(baldosa[i][j].pos, cartaSeleccionada.lvl));
-          baldosa[i][j].plantado = true;
-          int a = plantas.size() - 1;
-          Planta p = plantas.get(a);
-          points -= p.costo;
-        } else if (mouse.x > baldosa[i][j].pos.x &&
-          mouse.x < baldosa[i][j].pos.x + baldosa[i][j].tam.x &&
-          mouse.y > baldosa[i][j].pos.y &&
-          mouse.y < baldosa[i][j].pos.y + baldosa[i][j].tam.y && baldosa[i][j].plantado == true || cartaSeleccionada.coste - points <= 0) {
-          println("Ocupado");
+      for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 5; j++) {
+          if (mouse.x > baldosa[i][j].pos.x &&
+            mouse.x < baldosa[i][j].pos.x + baldosa[i][j].tam.x &&
+            mouse.y > baldosa[i][j].pos.y &&
+            mouse.y < baldosa[i][j].pos.y + baldosa[i][j].tam.y && baldosa[i][j].plantado == false && points - cartaSeleccionada.coste >= 0) {
+            plantas.add(new Planta(baldosa[i][j].pos, cartaSeleccionada.lvl));
+            baldosa[i][j].plantado = true;
+            int a = plantas.size() - 1;
+            Planta p = plantas.get(a);
+            points -= p.costo;
+          } else if (mouse.x > baldosa[i][j].pos.x &&
+            mouse.x < baldosa[i][j].pos.x + baldosa[i][j].tam.x &&
+            mouse.y > baldosa[i][j].pos.y &&
+            mouse.y < baldosa[i][j].pos.y + baldosa[i][j].tam.y && baldosa[i][j].plantado == true || cartaSeleccionada.coste - points <= 0) {
+            println("Ocupado");
+          }
+          isSeleccionada = false;
         }
-        isSeleccionada = false;
       }
     }
+    cartaSeleccionada = null;
+    cuandoArrastro = null;
   }
-  cartaSeleccionada = null;
-  cuandoArrastro = null;
-}
-
-void run() {
 }
 
 void creaGuisantes() {
@@ -143,9 +152,9 @@ void sistSoles() {
 }
 
 void creaZombies() {
-  if (tempZomb.elTiempoPaso()) {
+  if (tempZomb.elTiempoPaso() && millis() >= 10000) {
     tempZomb.actualizarVariables();
-    zombies.add(new Zombie(int(random(1, 6))));
+    zombies.add(new Zombie(int(random(1, 6)), estado-2));
   }
 }
 
@@ -153,10 +162,10 @@ void lasPlantasSiendoComidasPorZombie() {
   for (int i = plantas.size() - 1; i >= 0; i--) {
     Planta p = plantas.get(i);
     for (Zombie z : zombies) {
-      if (z.comiendo(p.pos) && z.come == null) {
+      if (z.comiendo(p.pos)) {
         z.comer();
-        if (z.come.elTiempoPaso()) {
-          z.come.actualizarVariables();
+        if (tempMordisco.elTiempoPaso()) {
+          tempMordisco.actualizarVariables();
           p.vida -= z.daño;
         }
       } else {
@@ -256,15 +265,75 @@ void mostrarTodo() {
     s.mostrar();
   }
 }
-       
 
-void perder() {
+void inicio() {
+  background(0, 150, 0);
+  textSize(100);
+  textAlign(CENTER);
+  fill(0, 0, 0);
+  text("Plantaversusonvi", width/2, height/2 - 100);
+  fill(160, 0, 0);
+  rect(width/2 - 50, height/2 - 20, 100, 60);
+  fill(25, 25, 25);
+  textSize(30);
+  text("Jugar", width/2, height/2 + 20);
+}
+
+void niveles() {
+  background(0, 150, 0);
+  textSize(100);
+  textAlign(CENTER);
+  fill(0, 0, 0);
+  text("Niveles", width/2, height/2 - 100);
+
+
+  fill(160, 0, 0);
+  rect(width/2 - 200, height/2 - 20, 100, 60);
+  fill(25, 25, 25);
+  textSize(30);
+  text("Nivel 1", width/2 - 150, height/2 + 20);
+
+
+  fill(160, 0, 0);
+  rect(width/2 - 50, height/2 - 20, 100, 60);
+  fill(25, 25, 25);
+  textSize(30);
+  text("Nivel 2", width/2, height/2 + 20);
+
+  fill(160, 0, 0);
+  rect(width/2 + 100, height/2 - 20, 100, 60);
+  fill(25, 25, 25);
+  textSize(30);
+  text("Nivel 3", width/2 + 150, height/2 + 20);
+}
+
+void juego() {
+  background(150, 150, 150);
+  actualizarCartasyPlantas();
+  sistBaldosas();
+  sistCortapastos();
+  creaGuisantes();
+  creaSoles();
+  creaZombies();
+  sistSoles();
+  lasPlantasSiendoComidasPorZombie();
+  colisionGuisZomb();
+  etapasDeZombie();
+  desaparecen();
+  mostrarTodo();
+  fill(255);
+  textSize(40);
+  textAlign(LEFT);
+  text(points, 30, 60);
   for (Zombie z : zombies) {
     if (z.pos.x <= -50) {
-      background(100, 0, 0);
-      textSize(100);
-      textAlign(CENTER);
-      text("PERDISTE", 100, 100);
+      estado = 6;
     }
   }
+}
+void perder() {
+  background(100, 0, 0);
+  textSize(100);
+  textAlign(CENTER);
+  text("PERDISTE", width/2, height/2);
 }

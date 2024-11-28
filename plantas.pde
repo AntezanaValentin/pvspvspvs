@@ -90,28 +90,28 @@ class Planta {
   }
 
   void lanzaGuisante() {
-    vida = 4;
+    vida = 10;
     creaObj = 1500;
     costo = 75;
     type = 2;
   }
 
   void lanzaGuisanteH() {
-    vida = 6;
+    vida = 12;
     creaObj = 1500;
     costo = 100;
     type = 3;
   }
 
   void lanzaGuisanteF() {
-    vida = 5;
+    vida = 15;
     creaObj = 1500;
     costo = 100;
     type = 4;
   }
 
   void girasol() {
-    vida = 2;
+    vida = 8;
     creaObj = 10000;
     costo = 25;
     type = 1;

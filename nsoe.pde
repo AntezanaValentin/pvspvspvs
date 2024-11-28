@@ -7,8 +7,8 @@ ArrayList<CortaPasto> cortapastos;
 ArrayList<Carta> cartas;
 ArrayList<Planta> plantasParaElegir;
 ArrayList<Particula> particulas;
-int points = 25;
-
+int points = 100;
+int estado = 1;
 
 void setup() {
   size(1050, 650);
@@ -43,27 +43,25 @@ void setup() {
 }
 
 void draw() {
-  background(150, 150, 150);
-
-  actualizarCartasyPlantas();
-  sistBaldosas();
-  sistCortapastos();
-  creaGuisantes();
-  creaSoles();
-  creaZombies();
-  sistSoles();
-  lasPlantasSiendoComidasPorZombie();
-  colisionGuisZomb();
-  etapasDeZombie();
-  desaparecen();
-  mostrarTodo();
-  fill(255);
-  textSize(40);
-  textAlign(LEFT);
-  text(points, 30, 60);
-  perder();
-  for(Zombie z : zombies) {
-    if(z.come != null)
-      println(z.come.elTiempoPaso(), z.come.duracion, z.come.ultimoEvento);
+  switch(estado) {
+    case 1:
+      inicio();
+      break;
+    case 2: 
+      niveles();
+      break;
+    case 3:
+      juego();
+      break;
+    case 4:
+      juego();
+      break;
+    case 5:
+      juego();
+    case 6:
+      perder();
+  }
+  for(Planta p : plantas){
+    println(p.vida);  
   }
 }

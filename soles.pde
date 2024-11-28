@@ -32,11 +32,11 @@ class Sol {
     pos.add(vel);
   }
 
-  void agarrado() {
+  void agarrado(float distancia) {
     PVector d = pos.copy();
     d.sub(sumando);
     d.normalize();
-    d.mult(-4);
+    d.mult(-distancia/20);
     vel.mult(0);
     vel.lerp(d, 1);
   }
